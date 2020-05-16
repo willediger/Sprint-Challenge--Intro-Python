@@ -36,7 +36,9 @@ def cityreader(cities=[]):
         cities_data = list(csv.reader(csvfile, delimiter=','))[1:]
     
         for row in cities_data:
-            cities.append(City(name=row[0], lat=row[3], lon=row[4]))
+            cities.append(City(name=row[0], lat=float(row[3]), lon=float(row[4])))
+        
+        return cities
 
 cityreader(cities)
 
