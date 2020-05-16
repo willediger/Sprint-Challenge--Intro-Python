@@ -1,6 +1,13 @@
 # Create a class to hold a city location. Call the class "City". It should have
 # fields for name, lat and lon (representing latitude and longitude).
 
+class City:
+    def __init__(self, name, lat, lon):
+        self.name = name
+        self.lat = lat
+        self.lon = lon
+    def __str__(self):
+        return f"""Name: {self.name}, Latitude: {self.lat}, Longitude: {self.lon}"""
 
 # We have a collection of US cities with population over 750,000 stored in the
 # file "cities.csv". (CSV stands for "comma-separated values".)
@@ -16,12 +23,22 @@
 # should not be loaded into a City object.
 cities = []
 
+import csv
+
 def cityreader(cities=[]):
   # TODO Implement the functionality to read from the 'cities.csv' file
   # For each city record, create a new City instance and add it to the 
   # `cities` list
+    with open('src/cityreader/cities.csv', newline='') as csvfile:
+
+        #first row has headers, which we'll exclude from cities_data, but include below:
+        #city,state_name,county_name,lat,lng,population,density,timezone,zips
+        cities_data = list(csv.reader(csvfile, delimiter=','))[1:]
     
-    return cities
+        for row in cities_data:
+            cities.append(City(name=row[0], lat=float(row[3]), lon=float(row[4])))
+        
+        return cities
 
 cityreader(cities)
 
@@ -58,14 +75,16 @@ for c in cities:
 # Tucson: (32.1558,-110.8777)
 # Salt Lake City: (40.7774,-111.9301)
 
-# TODO Get latitude and longitude values from the user
-
 def cityreader_stretch(lat1, lon1, lat2, lon2, cities=[]):
-  # within will hold the cities that fall within the specified region
-  within = []
 
-  # TODO Ensure that the lat and lon valuse are all floats
-  # Go through each city and check to see if it falls within 
-  # the specified coordinates.
+    # determines if city is within min/max bounds of both lat and lon
+    def check_city(city):
+        if (
+            min(lat1,lat2) <= city.lat <= max(lat1,lat2) and
+            min(lon1,lon2) <= city.lon <= max(lon1,lon2)
+        ):
+            return True
 
-  return within
+    within = [city for city in cities if check_city(city)]
+
+    return within
